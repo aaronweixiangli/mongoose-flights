@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+<table>
+    <thead>
+        <tr>
+            <th>Airline</th>
+            <th>Airport</th>
+            <th>Flight No.</th>
+            <th>Departure date/time</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% flights.forEach(function(f) { %>
+            <% if (f.departs < new Date()) { %>
+                <tr style="color:red">
+                    <td>
+                        <%= f.airline %>
+                    </td>
+                    <td>
+                        <%= f.airport %>
+                    </td>
+                    <td>
+                        <%= f.flightNo %>
+                    </td>
+                    <td>
+                        <%= new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric', timeZone: 'America/Los_Angeles',
+                        timeZoneName: 'short'}).format(f.departs) %>
+                    </td>
+                    <td>
+                        <a href="/flights/<%= f._id %>">Detail</a>
+                    </td>
+                    <td>
+                        <form
+                            action="/flights/<%= f._id %>?_method=DELETE" 
+                            method="POST"
+                            class="delete-form" 
+                            >
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }else { %>
+                <tr>
+                    <td>
+                        <%= f.airline %>
+                    </td>
+                    <td>
+                        <%= f.airport %>
+                    </td>
+                    <td>
+                        <%= f.flightNo %>
+                    </td>
+                    <td>
+                        <%= new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric', timeZone: 'America/Los_Angeles',
+                        timeZoneName: 'short'}).format(f.departs) %>
+                    </td>
+                    <td>
+                        <a href="/flights/<%= f._id %>">Detail</a>
+                    </td>
+                    <td>
+                        <form
+                            action="/flights/<%= f._id %>?_method=DELETE" 
+                            method="POST"
+                            class="delete-form" 
+                            >
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }; %>
+            <% }); %>
+    </tbody>
+</table>
+
+<%- include('../partials/footer') %>

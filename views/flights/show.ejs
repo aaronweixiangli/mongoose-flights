@@ -1,0 +1,86 @@
+<%- include('../partials/header') %>
+
+<table>
+    <tbody>
+        <tr>
+            <th>Airline</th>
+            <td><%= flight.airline %></td>
+        </tr>
+        <tr>
+            <th>Airport</th>
+            <td><%= flight.airport %></td>
+        </tr>
+        <tr>
+            <th>Flight No.</th>
+            <td><%= flight.flightNo %></td>
+        </tr>
+        <tr>
+            <th>Departure Date/Time</th>
+            <td><%= new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric', timeZone: 'America/Los_Angeles',
+                timeZoneName: 'short'}).format(flight.departs) %></td>
+        </tr>
+        
+    </tbody>
+</table>
+<br> <br>
+<table>
+    <tbody>
+        <tr>
+            <th>Destinations</th>
+            <th>Arrival Date/Time</th>
+        </tr>
+        <% flight.destinations.sort((a,b) => a.arrival - b.arrival).forEach(function(d) { %>
+            <tr>
+                <td><%= d.airport %></td>
+                <td>
+                    <%= new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: 'numeric', timeZone: 'America/Los_Angeles',
+                    timeZoneName: 'short'}).format(d.arrival) %>
+                </td>
+            </tr>
+        <% }) %>
+
+    </tbody>
+</table>
+<br>
+<h3>Add Destination</h3>
+<form method="POST" action="/flights/<%= flight._id %>/destinations">
+    <label>Destination</label>
+    <select name="airport">
+    <% airports.forEach(function(a) { %>
+        <% if (a !== flight.airport && !flight.destinations.map(obj => obj.airport).includes(a)) { %>
+            <option value="<%= a %>"><%= a %></option>
+      <% } %>
+    <% }) %>
+    </select><br>
+    <label>Arrival date/time</label>
+    <input type="datetime-local" name="arrival" min="<%= departsDate %>"><br>
+    <input type="submit" value="Add Destination">
+</form>
+<br><br>
+<table>
+    <tbody>
+        <tr>
+            <th>Tickets(Seat)</th>
+            <th>Price</th>
+        </tr>
+
+        <% tickets.forEach(function(t) { %>
+            <tr>
+                <td><%= t.seat %></td>
+                <td><%= t.price %></td>
+                <td>
+                    <form action="/flights/<%= flight._id %>/tickets/<%= t._id %>?_method=DELETE" method="POST">
+                        <input type="submit" value="Delete">
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+
+    </tbody>
+</table>
+<!-- <form method="POST" action="/flights/<%= flight._id %>/tickets/new">
+    <input type="submit" value="Add Ticket">
+</form> -->
+<a href="/flights/<%= flight._id %>/tickets/new">Add Ticket</a>
+
+<%- include('../partials/footer') %>
